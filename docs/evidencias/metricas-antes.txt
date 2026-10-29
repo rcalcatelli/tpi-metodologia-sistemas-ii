@@ -1,0 +1,7 @@
+Clase                                   LOC  Métodos                    Mayor método  CC máx  CC total
+Estudiante                               11        1               Estudiante (5 l.)       1         1
+GestorSolicitudes                       397       11      registrarSolicitud (81 l.)      36       139
+Main                                    110        2                    main (81 l.)      20        24
+Responsable                              11        1              Responsable (5 l.)       1         1
+Solicitud                                31        2                toString (16 l.)       4         5
+TOTAL                                   560
