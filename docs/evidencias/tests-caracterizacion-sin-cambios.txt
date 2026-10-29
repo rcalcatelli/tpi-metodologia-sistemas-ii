@@ -1,0 +1,4 @@
+$ git log --oneline estado-inicial..HEAD -- src/test/java/ar/edu/utn/tup/solicitudes/CaracterizacionGestorTest.java src/test/java/ar/edu/utn/tup/solicitudes/DemoGoldenMasterTest.java src/test/resources/golden
+88a10bb Agrega tests de caracterización y golden master sobre la versión inicial
+
+Único commit que toca los tests de caracterización: el que los creó sobre la versión inicial.
