@@ -41,20 +41,21 @@ public class Solicitud {
         return new Solicitud(id, estudiante, tipo, descripcion, prioridad, fechaAlta, estado, responsable, observacion);
     }
 
-    public void cambiarEstado(Estado destino, String observacion) {
+    /** La observación se registra solo al cerrar la solicitud (resolver o rechazar). */
+    public void cambiarEstado(Estado destino, String observacionDeCierre) {
         verificarAbierta();
         if (destino == null || !estado.puedePasarA(destino)) {
             throw new ReglaNegocioException("transicion invalida");
         }
-        if (destino == Estado.RECHAZADA && (observacion == null || observacion.isBlank())) {
+        if (destino == Estado.RECHAZADA && (observacionDeCierre == null || observacionDeCierre.isBlank())) {
             throw new ReglaNegocioException("para rechazar hay que indicar el motivo");
         }
-        if (destino == Estado.RESUELTA && responsable == null) {
+        if (destino == Estado.RESUELTA && !tieneResponsable()) {
             throw new ReglaNegocioException("no se puede resolver sin responsable");
         }
         estado = destino;
-        if (destino.esFinal() && observacion != null) {
-            this.observacion = observacion;
+        if (destino.esFinal() && observacionDeCierre != null) {
+            observacion = observacionDeCierre;
         }
     }
 

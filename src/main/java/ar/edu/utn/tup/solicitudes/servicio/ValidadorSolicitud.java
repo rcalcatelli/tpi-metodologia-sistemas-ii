@@ -2,6 +2,7 @@ package ar.edu.utn.tup.solicitudes.servicio;
 
 import ar.edu.utn.tup.solicitudes.DatosInvalidosException;
 import ar.edu.utn.tup.solicitudes.DatosSolicitud;
+import ar.edu.utn.tup.solicitudes.Email;
 import ar.edu.utn.tup.solicitudes.Prioridad;
 import ar.edu.utn.tup.solicitudes.TipoSolicitud;
 
@@ -22,8 +23,7 @@ public class ValidadorSolicitud {
     }
 
     public void validarEmail(String email) {
-        boolean valido = email != null && email.contains("@") && email.contains(".") && !email.startsWith("@");
-        exigir(valido, "email invalido");
+        exigir(Email.esValido(email), "email invalido");
     }
 
     private void validarLegajo(String legajo) {

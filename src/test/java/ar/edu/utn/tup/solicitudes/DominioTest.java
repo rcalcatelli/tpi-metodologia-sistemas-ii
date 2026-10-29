@@ -60,6 +60,13 @@ class DominioTest {
         }
 
         @Test
+        void estudianteNoAceptaEmailInvalido() {
+            Estudiante estudiante = new Estudiante("10001", "Ana", "ana@example.com");
+            assertThrows(DatosInvalidosException.class, () -> estudiante.cambiarEmail("sin-arroba"));
+            assertEquals("ana@example.com", estudiante.getEmail());
+        }
+
+        @Test
         void responsableAtiendeSoloLosTiposDeSuArea() {
             assertTrue(DEPARTAMENTO.puedeAtender(TipoSolicitud.EQUIVALENCIA));
             assertTrue(DEPARTAMENTO.puedeAtender(TipoSolicitud.REVISION_NOTA));

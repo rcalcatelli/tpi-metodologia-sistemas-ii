@@ -17,7 +17,9 @@ import ar.edu.utn.tup.solicitudes.persistencia.SolicitudRepository;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -95,7 +97,9 @@ public class SolicitudService {
     /** Reemplaza los datos en memoria (por ejemplo, al cargar un archivo). */
     public void reemplazarDatos(List<Solicitud> nuevasSolicitudes) {
         solicitudes.reemplazarTodas(nuevasSolicitudes);
-        estudiantes.reemplazarTodos(nuevasSolicitudes.stream().map(Solicitud::getEstudiante).distinct().toList());
+        Map<String, Estudiante> estudiantesPorLegajo = new LinkedHashMap<>();
+        nuevasSolicitudes.forEach(s -> estudiantesPorLegajo.putIfAbsent(s.getEstudiante().getLegajo(), s.getEstudiante()));
+        estudiantes.reemplazarTodos(estudiantesPorLegajo.values());
     }
 
     private Solicitud obtener(int id) {

@@ -13,6 +13,9 @@ public class Estudiante {
     }
 
     public void cambiarEmail(String nuevoEmail) {
+        if (!Email.esValido(nuevoEmail)) {
+            throw new DatosInvalidosException("email invalido");
+        }
         this.email = nuevoEmail;
     }
 
