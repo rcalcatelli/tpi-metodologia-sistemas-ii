@@ -1,0 +1,15 @@
+$ printf "2\nabc\n0\n" | java -jar sistema-solicitudes-academicas-1.0.0.jar   # estado-refactorizado
+7. Cargar desde archivo
+0. Salir
+Opcion: Id: Error: debe ingresar un numero
+
+=== SISTEMA DE SOLICITUDES ACADEMICAS ===
+1. Registrar solicitud
+2. Cambiar estado
+3. Asignar responsable
+4. Buscar solicitudes
+5. Reporte
+6. Guardar en archivo
+7. Cargar desde archivo
+0. Salir
+Opcion: (código de salida: 0)

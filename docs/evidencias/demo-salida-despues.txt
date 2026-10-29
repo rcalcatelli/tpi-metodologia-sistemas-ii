@@ -1,0 +1,37 @@
+Solicitud registrada con id 1
+Solicitud registrada con id 2
+Solicitud registrada con id 3
+Solicitud registrada con id 4
+Error: legajo invalido
+Error: ya existe una solicitud abierta de ese tipo
+Solicitud 1 asignada a Laura Gómez
+Error: el responsable no pertenece al area Departamento Académico
+Solicitud 2 asignada a Martín Díaz
+Solicitud 3 asignada a Javier Ruiz
+Solicitud 1 ahora esta RESUELTA
+Error: para rechazar hay que indicar el motivo
+Solicitud 2 ahora esta RECHAZADA
+Error: transicion invalida
+Error: la solicitud ya esta cerrada
+-- Solicitudes abiertas --
+#3 [EN_PROCESO] REVISION_NOTA - Carla Medina (10003) - Prioridad: ALTA - Resp: Javier Ruiz
+#4 [PENDIENTE] BAJA_MATERIA - Ana Torres (10001) - Prioridad: BAJA - Resp: (sin asignar)
+===== REPORTE DE SOLICITUDES =====
+Total: 4
+-- Por estado --
+PENDIENTE: 1
+EN_PROCESO: 1
+RESUELTA: 1
+RECHAZADA: 1
+-- Por tipo --
+CERTIFICADO: 1
+EQUIVALENCIA: 1
+REVISION_NOTA: 1
+BAJA_MATERIA: 1
+-- Por prioridad --
+ALTA: 1
+MEDIA: 1
+BAJA: 2
+Sin responsable asignado: 1
+Tasa de resolucion: 50.0%
+==================================

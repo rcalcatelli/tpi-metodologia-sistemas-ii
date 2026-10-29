@@ -1,0 +1,14 @@
+$ printf "2\nabc\n0\n" | java -jar sistema-solicitudes-academicas-1.0.0.jar   # estado-inicial
+2. Cambiar estado
+3. Asignar responsable
+4. Buscar solicitudes
+5. Reporte
+6. Guardar en archivo
+7. Cargar desde archivo
+0. Salir
+Opcion: Id: Exception in thread "main" java.lang.NumberFormatException: For input string: "abc"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:668)
+	at java.base/java.lang.Integer.parseInt(Integer.java:786)
+	at ar.edu.utn.tup.solicitudes.Main.main(Main.java:53)
+(código de salida: 1)

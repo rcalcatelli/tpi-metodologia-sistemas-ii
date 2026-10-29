@@ -1,0 +1,30 @@
+Clase                                   LOC  Métodos                    Mayor método  CC máx  CC total
+Area                                     13        2                     Area (3 l.)       1         2
+DatosInvalidosException                   6        1  DatosInvalidosException (3 l.)       1         1
+DatosSolicitud                            7        1   usaPrioridadAutomatica (3 l.)       1         1
+Estado                                   22        3              puedePasarA (7 l.)       6         9
+Estudiante                               23        5               Estudiante (5 l.)       1         5
+FiltroSolicitudes                        24        6                   acepta (6 l.)       8        13
+GestorSolicitudes                       128       17                  buscar (13 l.)       7        28
+Main                                     15        1                     main (8 l.)       3         3
+ArchivoCsvSolicitudes                    92        7              desdeLinea (18 l.)       3        13
+ArchivoInvalidoException                  7        1 ArchivoInvalidoException (3 l.)       1         1
+CatalogoResponsables                     26        4     CatalogoResponsables (7 l.)       1         4
+EstudianteRepository                      9        0                               -       0         0
+RepositorioEstudiantesEnMemoria          22        3          reemplazarTodos (4 l.)       1         3
+RepositorioSolicitudesEnMemoria          33        5          reemplazarTodas (5 l.)       1         5
+ResponsableRepository                     8        0                               -       0         0
+SolicitudRepository                      11        0                               -       0         0
+Prioridad                                18        3                Prioridad (3 l.)       1         3
+RecursoNoEncontradoException              6        1RecursoNoEncontradoException (3 l.)       1         1
+ReglaNegocioException                     6        1    ReglaNegocioException (3 l.)       1         1
+ReporteSolicitudes                       50        5                 generar (21 l.)       5        10
+Responsable                              23        5              Responsable (5 l.)       1         5
+SolicitudService                        106       14                registrar (9 l.)       4        18
+ValidadorSolicitud                       49        9                  validar (8 l.)       4        18
+Solicitud                               105       17           cambiarEstado (16 l.)      10        30
+SolicitudException                        6        1       SolicitudException (3 l.)       1         1
+TipoSolicitud                            24        4            TipoSolicitud (4 l.)       1         4
+ConsolaApp                              127       13      asignarResponsable (16 l.)       8        32
+EscenarioDemo                            34        2                ejecutar (22 l.)       1         2
+TOTAL                                  1000

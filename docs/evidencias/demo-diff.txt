@@ -1,0 +1,2 @@
+diff demo-salida-antes.txt demo-salida-despues.txt (ignorando fin de línea CRLF/LF)
+Resultado: SIN DIFERENCIAS (37 líneas idénticas)

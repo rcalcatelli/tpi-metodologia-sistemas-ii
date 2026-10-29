@@ -1,0 +1,9 @@
+Commit    Mensaje                                                                   Tests Fallos Errores
+88a10bb   Agrega tests de caracterización y golden master sobre la versión inici     59      0      0
+3fe4b1e   Documenta diagnóstico: sistema base, calidad externa/interna y 16 code      59      0      0
+2f9b24a   Refactor: Replace Type Code with Enum y Move Method a los enums              59      0      0
+b0277d9   Refactor: Extract Method, Rename y eliminación de duplicación              59      0      0
+05ebf89   Refactor: Introduce Parameter Object, Encapsulate Field, Move Method y e     59      0      0
+8b133c3   Refactor: Extract Class e inversión de dependencias (SRP, DIP, ISP)         59      0      0
+74ee84c   Refactor: Extract Class en la interfaz de consola                            59      0      0
+6808995   Agrega tests unitarios de dominio, servicio, persistencia y consola          96      0      0
