@@ -57,7 +57,7 @@ public class Main {
                 String o = sc.nextLine();
                 g.cambiarEstado(id, e, o);
             } else if (op == 3) {
-                for (Responsable r : g.getResps()) {
+                for (Responsable r : g.getResponsables()) {
                     System.out.println(r.id + " - " + r.nombre + " (" + r.area.getNombre() + ")");
                 }
                 System.out.print("Id solicitud: ");
