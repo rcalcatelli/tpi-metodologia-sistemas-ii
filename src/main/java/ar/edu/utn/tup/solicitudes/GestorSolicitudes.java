@@ -24,10 +24,10 @@ public class GestorSolicitudes {
     public GestorSolicitudes() {
         ultimoId = 0;
         // responsables fijos
-        resps.add(new Responsable(1, "Laura Gómez", "Alumnado"));
-        resps.add(new Responsable(2, "Martín Díaz", "Departamento Académico"));
-        resps.add(new Responsable(3, "Sofía Pereyra", "Bedelía"));
-        resps.add(new Responsable(4, "Javier Ruiz", "Departamento Académico"));
+        resps.add(new Responsable(1, "Laura Gómez", Area.ALUMNADO));
+        resps.add(new Responsable(2, "Martín Díaz", Area.DEPARTAMENTO_ACADEMICO));
+        resps.add(new Responsable(3, "Sofía Pereyra", Area.BEDELIA));
+        resps.add(new Responsable(4, "Javier Ruiz", Area.DEPARTAMENTO_ACADEMICO));
     }
 
     // registra una solicitud nueva. devuelve el id o -1 si hubo error
@@ -58,7 +58,8 @@ public class GestorSolicitudes {
             return -1;
         }
         // validar tipo
-        if (tipo == null || !(tipo.equals("CERTIFICADO") || tipo.equals("EQUIVALENCIA") || tipo.equals("REVISION_NOTA") || tipo.equals("BAJA_MATERIA"))) {
+        TipoSolicitud tipoSolicitud = TipoSolicitud.desdeNombre(tipo).orElse(null);
+        if (tipoSolicitud == null) {
             System.out.println("Error: tipo invalido");
             return -1;
         }
@@ -73,7 +74,7 @@ public class GestorSolicitudes {
         }
         // no puede haber otra pendiente del mismo tipo para el mismo alumno
         for (Solicitud s : lst) {
-            if (s.est.legajo.equals(legajo) && s.tipo.equals(tipo) && (s.estado.equals("PENDIENTE") || s.estado.equals("EN_PROCESO"))) {
+            if (s.est.legajo.equals(legajo) && s.tipo == tipoSolicitud && !s.estado.esFinal()) {
                 System.out.println("Error: ya existe una solicitud abierta de ese tipo");
                 return -1;
             }
@@ -89,31 +90,14 @@ public class GestorSolicitudes {
             e = new Estudiante(legajo, nombre, email);
             ests.add(e);
         }
-        // prioridad por defecto segun tipo
-        if (prioridad == 0) {
-            switch (tipo) {
-                case "CERTIFICADO":
-                    prioridad = 3;
-                    break;
-                case "EQUIVALENCIA":
-                    prioridad = 2;
-                    break;
-                case "REVISION_NOTA":
-                    prioridad = 1;
-                    break;
-                case "BAJA_MATERIA":
-                    prioridad = 2;
-                    break;
-            }
-        }
         Solicitud s = new Solicitud();
         ultimoId++;
         s.id = ultimoId;
         s.est = e;
-        s.tipo = tipo;
+        s.tipo = tipoSolicitud;
         s.desc = desc;
-        s.prioridad = prioridad;
-        s.estado = "PENDIENTE";
+        s.prioridad = prioridad == 0 ? tipoSolicitud.getPrioridadPorDefecto() : Prioridad.desdeCodigo(prioridad).orElseThrow();
+        s.estado = Estado.PENDIENTE;
         s.fecha = LocalDate.now();
         s.obs = "";
         lst.add(s);
@@ -149,45 +133,26 @@ public class GestorSolicitudes {
             return false;
         }
         // si ya esta cerrada no se puede tocar
-        if (s.estado.equals("RESUELTA") || s.estado.equals("RECHAZADA")) {
+        if (s.estado == Estado.RESUELTA || s.estado == Estado.RECHAZADA) {
             System.out.println("Error: la solicitud ya esta cerrada");
             return false;
         }
-        if (s.estado.equals("PENDIENTE")) {
-            if (nuevo.equals("EN_PROCESO")) {
-                s.estado = nuevo;
-            } else if (nuevo.equals("RECHAZADA")) {
-                if (obs == null || obs.trim().equals("")) {
-                    System.out.println("Error: para rechazar hay que indicar el motivo");
-                    return false;
-                }
-                s.estado = nuevo;
-                s.obs = obs;
-            } else {
-                System.out.println("Error: transicion invalida");
-                return false;
-            }
-        } else if (s.estado.equals("EN_PROCESO")) {
-            if (nuevo.equals("RESUELTA")) {
-                if (s.resp == null) {
-                    System.out.println("Error: no se puede resolver sin responsable");
-                    return false;
-                }
-                s.estado = nuevo;
-                if (obs != null) {
-                    s.obs = obs;
-                }
-            } else if (nuevo.equals("RECHAZADA")) {
-                if (obs == null || obs.trim().equals("")) {
-                    System.out.println("Error: para rechazar hay que indicar el motivo");
-                    return false;
-                }
-                s.estado = nuevo;
-                s.obs = obs;
-            } else {
-                System.out.println("Error: transicion invalida");
-                return false;
-            }
+        Estado destino = Estado.desdeNombre(nuevo).orElse(null);
+        if (destino == null || !s.estado.puedePasarA(destino)) {
+            System.out.println("Error: transicion invalida");
+            return false;
+        }
+        if (destino == Estado.RECHAZADA && (obs == null || obs.trim().equals(""))) {
+            System.out.println("Error: para rechazar hay que indicar el motivo");
+            return false;
+        }
+        if (destino == Estado.RESUELTA && s.resp == null) {
+            System.out.println("Error: no se puede resolver sin responsable");
+            return false;
+        }
+        s.estado = destino;
+        if (destino.esFinal() && obs != null) {
+            s.obs = obs;
         }
         System.out.println("Solicitud " + id + " ahora esta " + s.estado);
         return true;
@@ -204,7 +169,7 @@ public class GestorSolicitudes {
             System.out.println("Error: no existe la solicitud " + id);
             return false;
         }
-        if (s.estado.equals("RESUELTA") || s.estado.equals("RECHAZADA")) {
+        if (s.estado == Estado.RESUELTA || s.estado == Estado.RECHAZADA) {
             System.out.println("Error: la solicitud ya esta cerrada");
             return false;
         }
@@ -218,22 +183,14 @@ public class GestorSolicitudes {
             System.out.println("Error: no existe el responsable " + idResp);
             return false;
         }
-        // cada tipo lo atiende un area
-        String area = "";
-        if (s.tipo.equals("CERTIFICADO")) {
-            area = "Alumnado";
-        } else if (s.tipo.equals("EQUIVALENCIA") || s.tipo.equals("REVISION_NOTA")) {
-            area = "Departamento Académico";
-        } else if (s.tipo.equals("BAJA_MATERIA")) {
-            area = "Bedelía";
-        }
-        if (!r.area.equals(area)) {
-            System.out.println("Error: el responsable no pertenece al area " + area);
+        Area area = s.tipo.getAreaResponsable();
+        if (r.area != area) {
+            System.out.println("Error: el responsable no pertenece al area " + area.getNombre());
             return false;
         }
         s.resp = r;
-        if (s.estado.equals("PENDIENTE")) {
-            s.estado = "EN_PROCESO";
+        if (s.estado == Estado.PENDIENTE) {
+            s.estado = Estado.EN_PROCESO;
         }
         System.out.println("Solicitud " + id + " asignada a " + r.nombre);
         return true;
@@ -253,16 +210,16 @@ public class GestorSolicitudes {
         List<Solicitud> res = new ArrayList<>();
         for (Solicitud s : lst) {
             boolean ok = true;
-            if (estado != null && !s.estado.equals(estado)) {
+            if (estado != null && !s.estado.name().equals(estado)) {
                 ok = false;
             }
-            if (tipo != null && !s.tipo.equals(tipo)) {
+            if (tipo != null && !s.tipo.name().equals(tipo)) {
                 ok = false;
             }
             if (legajo != null && !s.est.legajo.equals(legajo)) {
                 ok = false;
             }
-            if (prioridad != 0 && s.prioridad != prioridad) {
+            if (prioridad != 0 && s.prioridad.getCodigo() != prioridad) {
                 ok = false;
             }
             if (ok) {
@@ -274,7 +231,7 @@ public class GestorSolicitudes {
             for (int j = 0; j < res.size() - 1 - i; j++) {
                 Solicitud a = res.get(j);
                 Solicitud b = res.get(j + 1);
-                if (a.prioridad > b.prioridad || (a.prioridad == b.prioridad && a.id > b.id)) {
+                if (a.prioridad.compareTo(b.prioridad) > 0 || (a.prioridad == b.prioridad && a.id > b.id)) {
                     res.set(j, b);
                     res.set(j + 1, a);
                 }
@@ -290,64 +247,64 @@ public class GestorSolicitudes {
         d += "-- Por estado --\n";
         int c = 0;
         for (Solicitud s : lst) {
-            if (s.estado.equals("PENDIENTE")) c++;
+            if (s.estado == Estado.PENDIENTE) c++;
         }
         d += "PENDIENTE: " + c + "\n";
         c = 0;
         for (Solicitud s : lst) {
-            if (s.estado.equals("EN_PROCESO")) c++;
+            if (s.estado == Estado.EN_PROCESO) c++;
         }
         d += "EN_PROCESO: " + c + "\n";
         int res = 0;
         for (Solicitud s : lst) {
-            if (s.estado.equals("RESUELTA")) res++;
+            if (s.estado == Estado.RESUELTA) res++;
         }
         d += "RESUELTA: " + res + "\n";
         int rech = 0;
         for (Solicitud s : lst) {
-            if (s.estado.equals("RECHAZADA")) rech++;
+            if (s.estado == Estado.RECHAZADA) rech++;
         }
         d += "RECHAZADA: " + rech + "\n";
         d += "-- Por tipo --\n";
         c = 0;
         for (Solicitud s : lst) {
-            if (s.tipo.equals("CERTIFICADO")) c++;
+            if (s.tipo == TipoSolicitud.CERTIFICADO) c++;
         }
         d += "CERTIFICADO: " + c + "\n";
         c = 0;
         for (Solicitud s : lst) {
-            if (s.tipo.equals("EQUIVALENCIA")) c++;
+            if (s.tipo == TipoSolicitud.EQUIVALENCIA) c++;
         }
         d += "EQUIVALENCIA: " + c + "\n";
         c = 0;
         for (Solicitud s : lst) {
-            if (s.tipo.equals("REVISION_NOTA")) c++;
+            if (s.tipo == TipoSolicitud.REVISION_NOTA) c++;
         }
         d += "REVISION_NOTA: " + c + "\n";
         c = 0;
         for (Solicitud s : lst) {
-            if (s.tipo.equals("BAJA_MATERIA")) c++;
+            if (s.tipo == TipoSolicitud.BAJA_MATERIA) c++;
         }
         d += "BAJA_MATERIA: " + c + "\n";
         d += "-- Por prioridad --\n";
         c = 0;
         for (Solicitud s : lst) {
-            if (s.prioridad == 1) c++;
+            if (s.prioridad == Prioridad.ALTA) c++;
         }
         d += "ALTA: " + c + "\n";
         c = 0;
         for (Solicitud s : lst) {
-            if (s.prioridad == 2) c++;
+            if (s.prioridad == Prioridad.MEDIA) c++;
         }
         d += "MEDIA: " + c + "\n";
         c = 0;
         for (Solicitud s : lst) {
-            if (s.prioridad == 3) c++;
+            if (s.prioridad == Prioridad.BAJA) c++;
         }
         d += "BAJA: " + c + "\n";
         c = 0;
         for (Solicitud s : lst) {
-            if (s.resp == null && !s.estado.equals("RESUELTA") && !s.estado.equals("RECHAZADA")) c++;
+            if (s.resp == null && !s.estado.esFinal()) c++;
         }
         d += "Sin responsable asignado: " + c + "\n";
         if (res + rech == 0) {
@@ -369,7 +326,7 @@ public class GestorSolicitudes {
                 String idR = "";
                 if (s.resp != null) idR = "" + s.resp.id;
                 pw.println(s.id + ";" + s.est.legajo + ";" + s.est.nombre + ";" + s.est.email + ";" + s.tipo + ";"
-                        + s.desc.replace(";", ",") + ";" + s.prioridad + ";" + s.estado + ";" + idR + ";" + s.fecha + ";"
+                        + s.desc.replace(";", ",") + ";" + s.prioridad.getCodigo() + ";" + s.estado + ";" + idR + ";" + s.fecha + ";"
                         + s.obs.replace(";", ","));
             }
             pw.close();
@@ -403,10 +360,10 @@ public class GestorSolicitudes {
                     ests.add(e);
                 }
                 s.est = e;
-                s.tipo = p[4];
+                s.tipo = TipoSolicitud.valueOf(p[4]);
                 s.desc = p[5];
-                s.prioridad = Integer.parseInt(p[6]);
-                s.estado = p[7];
+                s.prioridad = Prioridad.desdeCodigo(Integer.parseInt(p[6])).orElseThrow();
+                s.estado = Estado.valueOf(p[7]);
                 if (!p[8].equals("")) {
                     for (Responsable x : resps) {
                         if (x.id == Integer.parseInt(p[8])) {
