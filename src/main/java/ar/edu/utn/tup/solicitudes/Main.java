@@ -58,7 +58,7 @@ public class Main {
                 g.cambiarEstado(id, e, o);
             } else if (op == 3) {
                 for (Responsable r : g.getResponsables()) {
-                    System.out.println(r.id + " - " + r.nombre + " (" + r.area.getNombre() + ")");
+                    System.out.println(r.getId() + " - " + r.getNombre() + " (" + r.getArea().getNombre() + ")");
                 }
                 System.out.print("Id solicitud: ");
                 int id = Integer.parseInt(sc.nextLine().trim());
@@ -106,7 +106,7 @@ public class Main {
         g.cambiarEstado(a, "EN_PROCESO", "");
         System.out.println("-- Solicitudes abiertas --");
         for (Solicitud s : g.buscar(null, null, null, 0)) {
-            if (!s.estado.esFinal()) {
+            if (s.estaAbierta()) {
                 System.out.println(s);
             }
         }
