@@ -20,11 +20,11 @@
 |---|---:|---|---|
 | `CaracterizacionGestorTest` | 58 | Registro y validaciones, ciclo de estados, asignación por área, búsqueda y orden, reporte, CSV, email | `estado-inicial` |
 | `DemoGoldenMasterTest` | 1 | Salida completa del escenario de demostración | `estado-inicial` |
-| `DominioTest` | 23 | Tabla de transiciones de `Estado`, prioridad/área por tipo, reglas de `Solicitud` | versión refactorizada |
+| `DominioTest` | 24 | Tabla de transiciones de `Estado`, prioridad/área por tipo, reglas de `Solicitud` y `Estudiante` | versión refactorizada (+1 por el code review) |
 | `SolicitudServiceTest` | 7 | Reloj inyectado, numeración por instancia, excepciones tipadas, filtros | versión refactorizada |
 | `ArchivoCsvSolicitudesTest` | 4 | UTF-8, línea inválida, responsable inexistente, carga atómica | versión refactorizada |
 | `ConsolaAppTest` | 3 | Entrada no numérica, flujo completo por menú, fin de entrada | versión refactorizada |
-| **Total** | **96** | | |
+| **Total** | **97** | | |
 
 ## Casos de prueba representativos
 
