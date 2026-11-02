@@ -62,7 +62,7 @@ tools/verificar-historial.sh        # ejecuta la suite en cada commit del histor
 | Método más largo | 81 líneas | 22 líneas |
 | Complejidad ciclomática máxima por método | 36 | 10 |
 | Tests automatizados | 0 | 97 (0 fallos) |
-| Cobertura de líneas / ramas | — | 97,0 % / 92,2 % |
+| Cobertura de líneas / ramas | — | 96,9 % / 92,1 % |
 | Salida del escenario de demostración | 37 líneas | idéntica |
 
 ## Estructura
@@ -102,11 +102,15 @@ id;legajo;nombre;email;tipo;descripcion;prioridad;estado;idResponsable;fecha;obs
 
 ## Autoría
 
-| Integrante | Participación |
-|---|---|
-| Basualdo Arcati, Pablo Andrés | Expone y defiende: sistema base, calidad externa vs. interna, deuda técnica y code smells, pruebas y verificación. |
-| Calcatelli, Renzo | Expone y defiende: SOLID y Clean Code, refactoring seguro, code review y conclusiones. |
+Trabajo grupal. Ambos integrantes revisaron el trabajo completo; cada uno es
+responsable de exponer y defender las etapas indicadas.
 
-El detalle de cómo se produjo el código y la documentación, incluido el uso de IA, está en la [declaración de uso de IA](docs/ia/declaracion-uso-ia.md).
+| Integrante | Etapas a cargo (exposición y defensa) |
+|---|---|
+| Basualdo Arcati, Pablo Andrés | 1 Sistema base · 2 Calidad externa vs. interna · 3 Deuda técnica y code smells · 6 Pruebas y verificación |
+| Calcatelli, Renzo | 4 SOLID y Clean Code · 5 Refactoring seguro · 7 Code review · 8 Conclusiones |
+
+El trabajo se realizó con asistencia de IA, declarada en
+[docs/ia/declaracion-uso-ia.md](docs/ia/declaracion-uso-ia.md).
 
 Todos los datos del sistema son sintéticos.
