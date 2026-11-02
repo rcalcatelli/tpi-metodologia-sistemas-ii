@@ -69,7 +69,7 @@ del compilador a agregar una constante en un enum.
 > al aplicarlo, qué decisión costó más justificar y qué se haría distinto en un
 > próximo proyecto.
 
-### Basualdo Arcati, Pablo Andrés
+### Basualdo Arcati, Pablo Gabriel Ramón
 
 [COMPLETAR — 4 a 6 líneas]
 

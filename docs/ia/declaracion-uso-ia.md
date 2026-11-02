@@ -4,7 +4,7 @@ Conforme al punto 7 de la consigna.
 
 | Campo | Detalle |
 |---|---|
-| Integrantes | Basualdo Arcati, Pablo Andrés · Calcatelli, Renzo |
+| Integrantes | Basualdo Arcati, Pablo Gabriel Ramón · Calcatelli, Renzo |
 | Herramienta | Claude Code (Anthropic), modelo Claude Opus 5.5, en la aplicación de escritorio. |
 | Fecha | 29/10/2026 |
 | Finalidad | Asistencia para construir el sistema base, escribir los tests de caracterización, ejecutar los refactorings paso a paso, medir métricas y cobertura, y redactar la documentación técnica, el informe y el guion del video. |

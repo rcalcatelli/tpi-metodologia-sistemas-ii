@@ -109,7 +109,7 @@ responsable de exponer y defender las etapas indicadas.
 
 | Integrante | Etapas a cargo (exposición y defensa) |
 |---|---|
-| Basualdo Arcati, Pablo Andrés | 1 Sistema base · 2 Calidad externa vs. interna · 3 Deuda técnica y code smells · 6 Pruebas y verificación |
+| Basualdo Arcati, Pablo Gabriel Ramón | 1 Sistema base · 2 Calidad externa vs. interna · 3 Deuda técnica y code smells · 6 Pruebas y verificación |
 | Calcatelli, Renzo | 4 SOLID y Clean Code · 5 Refactoring seguro · 7 Code review · 8 Conclusiones |
 
 El trabajo se realizó con asistencia de IA, declarada en
