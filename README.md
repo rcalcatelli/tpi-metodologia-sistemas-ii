@@ -3,6 +3,8 @@
 Trabajo Práctico Integrador — **Metodología de Sistemas II** — Tecnicatura
 Universitaria en Programación a Distancia (UTN).
 
+Repositorio: https://github.com/rcalcatelli/tpi-metodologia-sistemas-ii
+
 Aplicación de consola en Java para registrar solicitudes de estudiantes
 (certificados, equivalencias, revisiones de nota y bajas de materia), asignarlas a
 un responsable del área correspondiente, cambiar su estado, buscarlas y obtener un
