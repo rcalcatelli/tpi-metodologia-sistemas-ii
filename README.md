@@ -64,7 +64,7 @@ tools/verificar-historial.sh        # ejecuta la suite en cada commit del histor
 | Método más largo | 81 líneas | 22 líneas |
 | Complejidad ciclomática máxima por método | 36 | 10 |
 | Tests automatizados | 0 | 97 (0 fallos) |
-| Cobertura de líneas / ramas | — | 96,9 % / 92,1 % |
+| Cobertura de líneas / ramas | — | 97,0 % / 92,2 % |
 | Salida del escenario de demostración | 37 líneas | idéntica |
 
 ## Estructura
