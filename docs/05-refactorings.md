@@ -19,7 +19,7 @@ ejecutaron los 59 tests de caracterización **sin modificarlos**
 **Problema:** tipo y estado eran `String`, la prioridad un `int`; la regla "qué
 prioridad y qué área corresponde a cada tipo" estaba en un `switch` y en un `if`.
 
-**Antes** (`GestorSolicitudes.java`, `estado-inicial`):
+**Antes** (`GestorSolicitudes.java`, `estado-inicial`; fragmento condensado: en el código real cada `case` ocupa tres líneas):
 
 ```java
 if (prioridad == 0) {
@@ -92,7 +92,7 @@ public int registrarSolicitud(String legajo, String nombre, String email, String
 }
 ```
 
-**Después:**
+**Después** (estado en el commit `b0277d9`; en la versión final esta lógica está en `SolicitudService.registrar`, porque R3 y R4 la reubicaron):
 
 ```java
 public int registrarSolicitud(String legajo, String nombre, String email, String tipo, String descripcion, int prioridad) {
@@ -110,7 +110,7 @@ public int registrarSolicitud(String legajo, String nombre, String email, String
 }
 ```
 
-Y los 11 bucles del reporte se reemplazaron por un método parametrizado que recorre los enums:
+Y los 11 bucles del reporte se reemplazaron por un método parametrizado que recorre los enums (también estado en `b0277d9`; en la versión final está en `ReporteSolicitudes.generar`):
 
 ```java
 for (Estado estado : Estado.values()) {
@@ -129,7 +129,7 @@ condiciones en el mismo orden, por lo que los mensajes de error no cambian.
 comodines `null`/`0` en la búsqueda; campos públicos; el gestor decidía por la
 solicitud (Feature Envy); errores como `-1`/`false`.
 
-**Introduce Parameter Object — antes / después:**
+**Introduce Parameter Object — ejemplo de uso** (ilustrativo: la consola, el demo y los tests siguen llamando a las firmas anteriores, que delegan en las nuevas):
 
 ```java
 // antes
@@ -147,7 +147,7 @@ ningún llamador existente se rompe.
 **Move Method — la regla vuelve al dato:**
 
 ```java
-// antes, en GestorSolicitudes
+// antes, en GestorSolicitudes (fragmento condensado de estado-inicial)
 if (!r.area.equals(area)) { System.out.println("Error: ..."); return false; }
 s.resp = r;
 if (s.estado.equals("PENDIENTE")) { s.estado = "EN_PROCESO"; }

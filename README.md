@@ -104,6 +104,9 @@ id;legajo;nombre;email;tipo;descripcion;prioridad;estado;idResponsable;fecha;obs
 
 | Integrante | Participación |
 |---|---|
-| Renzo Calcatelli | Trabajo individual: selección del caso, desarrollo, diagnóstico, refactoring, pruebas, code review y documentación (con asistencia de IA declarada). |
+| Basualdo Arcati, Pablo Andrés | Expone y defiende: sistema base, calidad externa vs. interna, deuda técnica y code smells, pruebas y verificación. |
+| Calcatelli, Renzo | Expone y defiende: SOLID y Clean Code, refactoring seguro, code review y conclusiones. |
+
+El detalle de cómo se produjo el código y la documentación, incluido el uso de IA, está en la [declaración de uso de IA](docs/ia/declaracion-uso-ia.md).
 
 Todos los datos del sistema son sintéticos.

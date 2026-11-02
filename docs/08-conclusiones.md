@@ -62,9 +62,17 @@ del compilador a agregar una constante en un enum.
 | Code review | Etapa 7: checklist, observaciones con severidad y decisión, criterios de aceptación. |
 | Repositorios y control de versiones | Commits atómicos, tags por etapa, historial verificable. |
 
-## Conclusión individual
+## Conclusiones individuales
 
-> **Para completar por el estudiante, con sus propias palabras** (la consigna pide
-> conclusiones grupales e individuales breves). Sugerencia de guía: qué concepto se
-> entendió mejor al aplicarlo, qué decisión costó más justificar y qué se haría
-> distinto en un próximo proyecto.
+> **Cada integrante completa su párrafo con sus propias palabras** (la consigna pide
+> conclusiones grupales e individuales breves). Guía: qué concepto se entendió mejor
+> al aplicarlo, qué decisión costó más justificar y qué se haría distinto en un
+> próximo proyecto.
+
+### Basualdo Arcati, Pablo Andrés
+
+[COMPLETAR — 4 a 6 líneas]
+
+### Calcatelli, Renzo
+
+[COMPLETAR — 4 a 6 líneas]
