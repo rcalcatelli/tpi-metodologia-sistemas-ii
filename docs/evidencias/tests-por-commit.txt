@@ -7,3 +7,9 @@ b0277d9   Refactor: Extract Method, Rename y eliminación de duplicación       
 8b133c3   Refactor: Extract Class e inversión de dependencias (SRP, DIP, ISP)         59      0      0
 74ee84c   Refactor: Extract Class en la interfaz de consola                            59      0      0
 6808995   Agrega tests unitarios de dominio, servicio, persistencia y consola          96      0      0
+7268c24   Documenta pruebas y verificación con evidencias antes/después              96      0      0
+ef993da   Aplica correcciones del code review                                          97      0      0
+c18c177   Documenta SOLID, refactorings, code review, conclusiones y uso de IA         97      0      0
+c71399d   Agrega generador del informe PDF a partir de docs/                           97      0      0
+152f604   Actualiza el conteo de tests en la documentación de pruebas                 97      0      0
+542e2d2   Adapta la documentación a entrega grupal y aclara fragmentos de refacto     97      0      0

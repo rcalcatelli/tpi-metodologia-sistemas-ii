@@ -1,8 +1,8 @@
-Cobertura JaCoCo 0.8.12 - mvn verify - estado final
+Cobertura JaCoCo 0.8.12 - mvn verify - estado final (542e2d2)
 
 Paquete.Clase                                                         Líneas       Ramas
-~.servicio.SolicitudService                                            51/51       10/10
-~.servicio.ValidadorSolicitud                                          29/29       31/32
+~.servicio.SolicitudService                                            53/53       10/10
+~.servicio.ValidadorSolicitud                                          28/28       24/24
 ~.reporte.ReporteSolicitudes                                           28/28       22/22
 ~.ui.EscenarioDemo                                                     25/25           -
 ~.ui.ConsolaApp                                                        77/84       23/30
@@ -10,11 +10,12 @@ Paquete.Clase                                                         Líneas   
 ~.Area                                                                   8/8           -
 ~.GestorSolicitudes                                                    55/59       10/14
 ~.FiltroSolicitudes                                                     8/10       16/16
-~.Estudiante                                                           10/10           -
+~.Estudiante                                                           12/12         2/2
 ~.TipoSolicitud                                                        12/12           -
 ~.Prioridad                                                              9/9         2/2
 ~.Responsable                                                            9/9         2/2
 ~.Solicitud                                                            49/49       29/30
+~.Email                                                                  1/1         7/8
 ~.ReglaNegocioException                                                  2/2           -
 ~.SolicitudException                                                     2/2           -
 ~.DatosInvalidosException                                                2/2           -
@@ -27,7 +28,7 @@ Paquete.Clase                                                         Líneas   
 ~.persistencia.CatalogoResponsables                                      7/7         2/2
 ~.persistencia.RepositorioSolicitudesEnMemoria                         12/12           -
 
-Instrucciones: 2412/2485 = 97.1%
-Ramas: 176/191 = 92.1%
-Líneas: 473/488 = 96.9%
-Métodos: 163/167 = 97.6%
+Instrucciones: 2434/2507 = 97.1%
+Ramas: 178/193 = 92.2%
+Líneas: 477/492 = 97.0%
+Métodos: 165/169 = 97.6%

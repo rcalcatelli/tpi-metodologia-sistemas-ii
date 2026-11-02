@@ -1,4 +1,4 @@
-Clase                                   LOC  MÈtodos                    Mayor mÈtodo  CC m·x  CC total
+Clase                                   LOC  M√©todos                    Mayor m√©todo  CC m√°x  CC total
 Area                                     13        2                     Area (3 l.)       1         2
 DatosInvalidosException                   6        1  DatosInvalidosException (3 l.)       1         1
 DatosSolicitud                            7        1   usaPrioridadAutomatica (3 l.)       1         1

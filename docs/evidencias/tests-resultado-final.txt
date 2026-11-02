@@ -1,4 +1,4 @@
-Suite completa sobre estado final (6808995)
+Suite completa sobre el estado final (542e2d2, mvn verify)
 
 Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.CaracterizacionGestorTest$ActualizarEmail
 Tests run: 13, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.CaracterizacionGestorTest$AsignarResponsable
@@ -11,10 +11,10 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.Ca
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.DemoGoldenMasterTest
 Tests run: 11, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.DominioTest$EstadoTest
 Tests run: 7, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.DominioTest$SolicitudTest
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.DominioTest$TipoTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.DominioTest$TipoTest
 Tests run: 0, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.DominioTest
 Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.persistencia.ArchivoCsvSolicitudesTest
 Tests run: 7, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.servicio.SolicitudServiceTest
 Tests run: 3, Failures: 0, Errors: 0, Skipped: 0 | ar.edu.utn.tup.solicitudes.ui.ConsolaAppTest
 
-TOTAL: 96 tests, 0 fallos, 0 errores
+TOTAL: 97 tests, 0 fallos, 0 errores
