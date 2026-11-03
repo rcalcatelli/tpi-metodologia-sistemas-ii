@@ -82,4 +82,11 @@ poco, en cambios chicos y revisados.
 
 ### Calcatelli, Renzo
 
-[COMPLETAR — 4 a 6 líneas]
+Lo que más me quedó es que un sistema puede funcionar bien y aun así ser caro de
+cambiar: la versión inicial cumplía todas sus reglas, pero agregar un tipo de
+solicitud obligaba a tocar cinco lugares. Entendí el valor de escribir los tests
+de caracterización antes de refactorizar y de avanzar en commits chicos, porque
+permiten demostrar que el comportamiento no cambió. También aprendí que el
+historial de Git es parte de la calidad: tuvimos que unificar copias y ordenar
+commits para que fuera trazable. En un próximo proyecto empezaría por los tests y
+documentaría cada decisión en el momento, no al final.
