@@ -26,7 +26,15 @@ tests y code review.
 
 ## Tecnologías
 
-Java 17 · Maven · JUnit 5 · JaCoCo · Python 3 (script de métricas)
+Java 17 · Maven · JUnit 5 · JaCoCo · Python 3 (métricas e informe PDF)
+
+Para regenerar el informe:
+
+```bash
+python -m pip install -r tools/requirements.txt
+python tools/generar_informe.py tools/informe.json informe.pdf              # falla si queda algún [COMPLETAR
+python tools/generar_informe.py tools/informe.json informe.pdf --borrador   # versión de trabajo
+```
 
 ## Instalación y uso
 

@@ -1,0 +1,3 @@
+# Dependencias de los scripts de tools/ (Python 3.10+).
+# Instalar con: python -m pip install -r tools/requirements.txt
+reportlab>=4.0,<6
