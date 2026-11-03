@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 from xml.sax.saxutils import escape
 
+import reportlab
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
@@ -26,14 +27,41 @@ from reportlab.platypus import (KeepTogether, PageBreak, Paragraph, Preformatted
                                 Table, TableStyle)
 from reportlab.platypus.tableofcontents import TableOfContents
 
-FUENTES = Path("C:/Windows/Fonts")
-pdfmetrics.registerFont(TTFont("Cuerpo", str(FUENTES / "calibri.ttf")))
-pdfmetrics.registerFont(TTFont("Cuerpo-Negrita", str(FUENTES / "calibrib.ttf")))
-pdfmetrics.registerFont(TTFont("Cuerpo-Cursiva", str(FUENTES / "calibrii.ttf")))
-pdfmetrics.registerFont(TTFont("Cuerpo-NegritaCursiva", str(FUENTES / "calibriz.ttf")))
-pdfmetrics.registerFont(TTFont("Codigo", str(FUENTES / "consola.ttf")))
-pdfmetrics.registerFontFamily("Cuerpo", normal="Cuerpo", bold="Cuerpo-Negrita", italic="Cuerpo-Cursiva",
-                              boldItalic="Cuerpo-NegritaCursiva")
+# Juegos de fuentes en orden de preferencia: (nombre, carpetas posibles, archivo por cada fuente lógica).
+# El último viene con reportlab, así que siempre está disponible, aunque no es monoespaciado para el código.
+JUEGOS_DE_FUENTES = [
+    ("Calibri/Consolas", [Path("C:/Windows/Fonts")],
+     {"Cuerpo": "calibri.ttf", "Cuerpo-Negrita": "calibrib.ttf", "Cuerpo-Cursiva": "calibrii.ttf",
+      "Cuerpo-NegritaCursiva": "calibriz.ttf", "Codigo": "consola.ttf"}),
+    ("DejaVu", [Path("/usr/share/fonts/truetype/dejavu"), Path("/usr/share/fonts/dejavu"),
+                Path("/usr/share/fonts/TTF"), Path("/Library/Fonts")],
+     {"Cuerpo": "DejaVuSans.ttf", "Cuerpo-Negrita": "DejaVuSans-Bold.ttf", "Cuerpo-Cursiva": "DejaVuSans-Oblique.ttf",
+      "Cuerpo-NegritaCursiva": "DejaVuSans-BoldOblique.ttf", "Codigo": "DejaVuSansMono.ttf"}),
+    ("Vera (incluida en reportlab)", [Path(reportlab.__file__).parent / "fonts"],
+     {"Cuerpo": "Vera.ttf", "Cuerpo-Negrita": "VeraBd.ttf", "Cuerpo-Cursiva": "VeraIt.ttf",
+      "Cuerpo-NegritaCursiva": "VeraBI.ttf", "Codigo": "Vera.ttf"}),
+]
+
+
+def ubicar_juego(carpetas, archivos):
+    """Devuelve la primera carpeta que contiene todos los archivos del juego, o None."""
+    return next((c for c in carpetas if all((c / a).is_file() for a in archivos.values())), None)
+
+
+def registrar_fuentes(juegos=None):
+    """Registra el primer juego de fuentes disponible en esta máquina y devuelve su nombre."""
+    for nombre, carpetas, archivos in juegos or JUEGOS_DE_FUENTES:
+        carpeta = ubicar_juego(carpetas, archivos)
+        if carpeta is None:
+            continue
+        for fuente, archivo in archivos.items():
+            pdfmetrics.registerFont(TTFont(fuente, str(carpeta / archivo)))
+        pdfmetrics.registerFontFamily("Cuerpo", normal="Cuerpo", bold="Cuerpo-Negrita", italic="Cuerpo-Cursiva",
+                                      boldItalic="Cuerpo-NegritaCursiva")
+        if nombre != JUEGOS_DE_FUENTES[0][0]:
+            print(f"Aviso: no se encontró Calibri/Consolas; se usa {nombre}.", file=sys.stderr)
+        return nombre
+    raise RuntimeError("No se encontró ningún juego de fuentes completo.")
 
 AZUL = colors.HexColor("#1F3B5C")
 AZUL_CLARO = colors.HexColor("#E8EEF5")
@@ -342,6 +370,7 @@ def main(argv=None):
     config = json.loads(argumentos.config.read_text(encoding="utf-8"))
     docs = Path(__file__).resolve().parent.parent / "docs"
     verificar_pendientes(config, docs, argumentos.borrador)
+    registrar_fuentes()
     historia = (portada(config) + seccion_indice() + seccion_resumen(config)
                 + seccion_capitulos(config, docs) + seccion_anexos(config, docs))
     construir_pdf(historia, config, str(argumentos.salida))
