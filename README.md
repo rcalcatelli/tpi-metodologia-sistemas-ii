@@ -48,6 +48,7 @@ Reporte de cobertura: `target/site/jacoco/index.html`.
 | `etapa-pruebas` | Tests unitarios nuevos y evidencias antes/después. |
 | `etapa-docs` | Code review, documentación completa e informe. |
 | `estado-refactorizado` | Estado final del código. |
+| `estadorefactorizado` | Mismo hito, con el nombre literal de la consigna. |
 
 ```bash
 git checkout estado-inicial         # ver la versión original

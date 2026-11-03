@@ -71,7 +71,14 @@ del compilador a agregar una constante en un enum.
 
 ### Basualdo Arcati, Pablo Gabriel Ramón
 
-[COMPLETAR — 4 a 6 líneas]
+Hace cuatro años y medio que trabajo como desarrollador full stack y dos años y
+medio que lidero un equipo de service desk, y este trabajo me confirmó algo que
+veo todos los días: que el código funcione no quiere decir que se pueda cambiar.
+Muchos incidentes nacen de una regla repetida en varios lugares que alguien
+actualizó en uno solo. Lo que más me sirvió fue escribir los tests de
+caracterización antes de tocar nada, porque sin esa red de seguridad el miedo a
+romper algo frena cualquier mejora. Lo que haría distinto es pagar la deuda de a
+poco, en cambios chicos y revisados.
 
 ### Calcatelli, Renzo
 
