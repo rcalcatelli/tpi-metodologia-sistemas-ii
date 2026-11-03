@@ -69,7 +69,7 @@ tools/verificar-historial.sh        # ejecuta la suite en cada commit del histor
 
 | Indicador | Antes | Después |
 |---|---:|---:|
-| Clase más grande | 397 LOC | 128 LOC |
+| Clase más grande | 397 LOC | 133 LOC |
 | Método más largo | 81 líneas | 22 líneas |
 | Complejidad ciclomática máxima por método | 36 | 10 |
 | Tests automatizados | 0 | 98 (0 fallos) |

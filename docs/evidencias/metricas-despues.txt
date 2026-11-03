@@ -26,6 +26,6 @@ ValidadorSolicitud                       49        9                  validar (8
 Solicitud                               105       17           cambiarEstado (16 l.)      10        30
 SolicitudException                        6        1       SolicitudException (3 l.)       1         1
 TipoSolicitud                            24        4            TipoSolicitud (4 l.)       1         4
-ConsolaApp                              127       13      asignarResponsable (16 l.)       8        32
+ConsolaApp                              133       13      asignarResponsable (16 l.)       8        32
 EscenarioDemo                            34        2                ejecutar (22 l.)       1         2
-TOTAL                                  1015
+TOTAL                                  1021

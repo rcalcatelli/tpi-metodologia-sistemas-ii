@@ -67,8 +67,8 @@ Fuente: [`tools/metricas.py`](../tools/metricas.py) sobre `estado-inicial` y la 
 | Indicador | Antes | Después |
 |---|---:|---:|
 | Clases | 5 | 29 |
-| LOC totales (sin comentarios ni líneas vacías) | 560 | 1015 |
-| Clase más grande | GestorSolicitudes, 397 LOC | GestorSolicitudes (fachada), 128 LOC |
+| LOC totales (sin comentarios ni líneas vacías) | 560 | 1021 |
+| Clase más grande | GestorSolicitudes, 397 LOC | ConsolaApp, 133 LOC (la fachada, 128) |
 | Método más largo | 81 líneas (`registrarSolicitud`, `main`) | 22 líneas (`EscenarioDemo.ejecutar`, secuencial) |
 | Complejidad ciclomática máxima por método | 36 | 10 (`Solicitud.cambiarEstado`) |
 | Complejidad total de la clase central | 139 | 28 |

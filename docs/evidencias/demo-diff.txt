@@ -1,2 +1,2 @@
-diff demo-salida-antes.txt demo-salida-despues.txt (ignorando fin de línea CRLF/LF), estado final 542e2d2
+diff demo-salida-antes.txt demo-salida-despues.txt (ignorando fin de línea CRLF/LF), estado final 43ca3e1
 Resultado: SIN DIFERENCIAS (37 líneas idénticas)

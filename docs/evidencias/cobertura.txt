@@ -1,11 +1,11 @@
-Cobertura JaCoCo 0.8.12 - mvn verify - estado final (542e2d2)
+Cobertura JaCoCo 0.8.12 - mvn verify - estado final (43ca3e1)
 
 Paquete.Clase                                                         Líneas       Ramas
 ~.servicio.SolicitudService                                            53/53       10/10
 ~.servicio.ValidadorSolicitud                                          28/28       24/24
 ~.reporte.ReporteSolicitudes                                           28/28       22/22
 ~.ui.EscenarioDemo                                                     25/25           -
-~.ui.ConsolaApp                                                        77/84       23/30
+~.ui.ConsolaApp                                                        80/87       23/30
 ~.RecursoNoEncontradoException                                           2/2           -
 ~.Area                                                                   8/8           -
 ~.GestorSolicitudes                                                    55/59       10/14
@@ -28,7 +28,7 @@ Paquete.Clase                                                         Líneas   
 ~.persistencia.CatalogoResponsables                                      7/7         2/2
 ~.persistencia.RepositorioSolicitudesEnMemoria                         12/12           -
 
-Instrucciones: 2434/2507 = 97.1%
+Instrucciones: 2446/2519 = 97.1%
 Ramas: 178/193 = 92.2%
-Líneas: 477/492 = 97.0%
-Métodos: 165/169 = 97.6%
+Líneas: 480/495 = 97.0%
+Métodos: 166/170 = 97.6%

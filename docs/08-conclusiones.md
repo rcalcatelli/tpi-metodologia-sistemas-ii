@@ -28,7 +28,7 @@ del compilador a agregar una constante en un enum.
 - **Distinguir defectos de comportamiento esperado.** Los tests de caracterización
   fijan también lo discutible (el `;` convertido en `,`). Hubo que decidir caso por
   caso qué se conservaba y qué se corregía.
-- **El tamaño total del código creció** (560 → 1015 LOC). Fue necesario justificar
+- **El tamaño total del código creció** (560 → 1021 LOC). Fue necesario justificar
   con métricas de complejidad por método que la mejora es real aunque haya más líneas.
 
 ## Límites del trabajo
