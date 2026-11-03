@@ -1,6 +1,7 @@
 package ar.edu.utn.tup.solicitudes.ui;
 
 import ar.edu.utn.tup.solicitudes.GestoresDePrueba;
+import ar.edu.utn.tup.solicitudes.TipoSolicitud;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -54,6 +55,16 @@ class ConsolaAppTest {
         assertContiene(salida, "Solicitud 1 ahora esta RESUELTA");
         assertContiene(salida, "#1 [RESUELTA] CERTIFICADO - Ana Torres (10001)");
         assertContiene(salida, "1 resultado(s)");
+    }
+
+    @Test
+    void laPreguntaDeTipoSeArmaDesdeElEnum() {
+        String salida = ejecutar("1", "", "", "", "", "", "", SALIR, "");  // alta incompleta: solo interesa la pregunta
+
+        assertContiene(salida, "Tipo (CERTIFICADO/EQUIVALENCIA/REVISION_NOTA/BAJA_MATERIA): ");
+        for (TipoSolicitud tipo : TipoSolicitud.values()) {
+            assertContiene(salida, tipo.name());
+        }
     }
 
     @Test

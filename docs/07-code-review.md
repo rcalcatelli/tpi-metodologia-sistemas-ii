@@ -10,7 +10,7 @@ revisión de métricas y cobertura, y prueba manual del menú con entradas invá
 | Ítem | Resultado | Observación |
 |---|---|---|
 | A1 SRP | Cumple | Servicio, validador, reporte, CSV, consola y entidades separados. |
-| A2 OCP | Cumple | Un tipo nuevo es una constante en `TipoSolicitud`; el reporte se adapta solo. |
+| A2 OCP | **Cumplía parcialmente → Cumple** | Un tipo nuevo es una constante en `TipoSolicitud`; el reporte y el menú se adaptan solos (CR-09). |
 | A3 LSP | Cumple | Repositorios intercambiables; excepciones tratadas por la clase base. |
 | A4 ISP | Cumple | Tres interfaces de repositorio de 2 a 5 métodos. |
 | A5 DIP | Cumple | Repositorios, validador, `Clock` y `PrintStream` inyectados. |
@@ -49,6 +49,7 @@ revisión de métricas y cobertura, y prueba manual del menú con entradas invá
 | CR-06 | Baja | `CaracterizacionGestorTest.formatoDelArchivo` | Compara contra `LocalDate.now()`: si el test corre exactamente a medianoche puede fallar. | **Aceptada:** el test caracteriza la versión inicial, que no permitía inyectar el reloj; los tests nuevos usan `Clock.fixed`. | `SolicitudServiceTest` |
 | CR-07 | Baja | `ArchivoCsvSolicitudes.sinSeparador` | Un `;` en la descripción se guarda como `,` (pérdida silenciosa heredada). | **Pendiente:** adoptar escape de CSV estándar; cambia el formato del archivo y requiere migración. | `CaracterizacionGestorTest.formatoDelArchivo` |
 | CR-08 | Baja | `ConsolaApp.atender` | Una opción de menú inexistente se ignora sin mensaje. | **Aceptada:** es el comportamiento original y el menú se vuelve a mostrar. | — |
+| CR-09 | Media | `ConsolaApp.registrarSolicitud` | La pregunta de tipo tenía los cuatro tipos escritos a mano: un tipo nuevo obligaba a editar la consola, contra lo que afirman la etapa 4 y el ítem A2. Observación de Basualdo Arcati en la revisión final. | **Corregida:** el texto se arma desde `TipoSolicitud.values()`. | `ConsolaAppTest.laPreguntaDeTipoSeArmaDesdeElEnum` |
 
 ## Feedback general al autor
 

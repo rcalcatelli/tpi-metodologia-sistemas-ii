@@ -41,7 +41,7 @@ ar.edu.utn.tup.solicitudes                 dominio + fachada
 | Principio | Problema en `estado-inicial` | Mejora aplicada | Dónde |
 |---|---|---|---|
 | **SRP** — una razón de cambio | `GestorSolicitudes` cambiaba por validación, reglas, reporte, CSV y consola (S1). | Cada responsabilidad en su clase: `ValidadorSolicitud` (formato), `Solicitud` (ciclo de vida), `SolicitudService` (casos de uso), `ReporteSolicitudes`, `ArchivoCsvSolicitudes`, `ConsolaApp`. | commits `8b133c3`, `74ee84c` |
-| **OCP** — abierto a extensión, cerrado a modificación | Agregar un tipo de solicitud tocaba 5 lugares (S5). | El tipo conoce su prioridad y su área; el reporte recorre `TipoSolicitud.values()`. Un tipo nuevo = **una línea** en el enum. | `TipoSolicitud`, `ReporteSolicitudes` |
+| **OCP** — abierto a extensión, cerrado a modificación | Agregar un tipo de solicitud tocaba 5 lugares (S5). | El tipo conoce su prioridad y su área; el reporte y el menú de la consola recorren `TipoSolicitud.values()`. Un tipo nuevo = **una línea** en el enum. | `TipoSolicitud`, `ReporteSolicitudes`, `ConsolaApp` |
 | **LSP** — sustitución | No había jerarquías. | Cualquier implementación de `SolicitudRepository` es intercambiable: los tests usan la de memoria igual que la aplicación. Las subclases de `SolicitudException` se tratan uniformemente en la fachada. | `persistencia/`, `GestorSolicitudes.ejecutar` |
 | **ISP** — interfaces chicas | No había interfaces. | Tres repositorios separados en lugar de uno genérico: `ArchivoCsvSolicitudes` solo depende de `ResponsableRepository`. | `persistencia/` |
 | **DIP** — depender de abstracciones | La lógica creaba `FileWriter`, usaba `LocalDate.now()` y `System.out` (S11). | `SolicitudService` recibe repositorios, validador y `Clock` por constructor; la fachada recibe el `PrintStream`. La composición se hace en un solo lugar (constructor de la fachada). | `SolicitudService`, `GestorSolicitudes` |
@@ -72,7 +72,7 @@ Fuente: [`tools/metricas.py`](../tools/metricas.py) sobre `estado-inicial` y la 
 | Método más largo | 81 líneas (`registrarSolicitud`, `main`) | 22 líneas (`EscenarioDemo.ejecutar`, secuencial) |
 | Complejidad ciclomática máxima por método | 36 | 10 (`Solicitud.cambiarEstado`) |
 | Complejidad total de la clase central | 139 | 28 |
-| Tests automatizados | 0 | 97 |
+| Tests automatizados | 0 | 98 |
 
 Las líneas totales **aumentan**: se cambia código concentrado por más clases
 pequeñas, interfaces y firmas explícitas. El objetivo no fue reducir líneas sino

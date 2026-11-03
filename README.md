@@ -39,7 +39,7 @@ python tools/generar_informe.py tools/informe.json informe.pdf --borrador   # ve
 ## Instalación y uso
 
 ```bash
-mvn verify                                                         # compila, 97 tests y reporte de cobertura
+mvn verify                                                         # compila, 98 tests y reporte de cobertura
 java -jar target/sistema-solicitudes-academicas-1.0.0.jar          # menú interactivo
 java -jar target/sistema-solicitudes-academicas-1.0.0.jar --demo   # escenario de demostración
 ```
@@ -72,7 +72,7 @@ tools/verificar-historial.sh        # ejecuta la suite en cada commit del histor
 | Clase más grande | 397 LOC | 128 LOC |
 | Método más largo | 81 líneas | 22 líneas |
 | Complejidad ciclomática máxima por método | 36 | 10 |
-| Tests automatizados | 0 | 97 (0 fallos) |
+| Tests automatizados | 0 | 98 (0 fallos) |
 | Cobertura de líneas / ramas | — | 97,0 % / 92,2 % |
 | Salida del escenario de demostración | 37 líneas | idéntica |
 

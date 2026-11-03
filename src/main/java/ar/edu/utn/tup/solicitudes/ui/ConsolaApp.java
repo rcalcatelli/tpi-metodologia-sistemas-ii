@@ -3,16 +3,23 @@ package ar.edu.utn.tup.solicitudes.ui;
 import ar.edu.utn.tup.solicitudes.GestorSolicitudes;
 import ar.edu.utn.tup.solicitudes.Responsable;
 import ar.edu.utn.tup.solicitudes.Solicitud;
+import ar.edu.utn.tup.solicitudes.TipoSolicitud;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /** Menú interactivo de consola. Solo lee, delega en la fachada y muestra. */
 public class ConsolaApp {
 
     private static final String ARCHIVO_DATOS = "solicitudes.csv";
+    /** Se arma desde el enum: un tipo nuevo aparece en el menú sin tocar esta clase. */
+    private static final String PREGUNTA_TIPO = Arrays.stream(TipoSolicitud.values())
+            .map(TipoSolicitud::name)
+            .collect(Collectors.joining("/", "Tipo (", "): "));
     private static final int SALIR = 0;
     private static final int OPCION_INVALIDA = -1;
 
@@ -66,7 +73,7 @@ public class ConsolaApp {
         String legajo = preguntar("Legajo: ");
         String nombre = preguntar("Nombre: ");
         String email = preguntar("Email: ");
-        String tipo = preguntar("Tipo (CERTIFICADO/EQUIVALENCIA/REVISION_NOTA/BAJA_MATERIA): ").trim().toUpperCase();
+        String tipo = preguntar(PREGUNTA_TIPO).trim().toUpperCase();
         String descripcion = preguntar("Descripcion: ");
         salida.print("Prioridad (1 alta, 2 media, 3 baja, 0 automatica): ");
         int prioridad = leerEntero().orElse(0);
