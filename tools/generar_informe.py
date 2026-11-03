@@ -62,6 +62,10 @@ ESTILOS = {
 REEMPLAZOS = {"✅": "Sí", "❌": "No —"}
 ANCHO_UTIL = A4[0] - 4 * cm
 
+PATRON_ITEM = r"^\s*([-*]|\d+\.)\s+"
+PATRON_SEPARADOR_TABLA = r"^\|[\s:|-]+\|$"
+PATRON_INICIO_BLOQUE = r"^(#|\||```|>|\s*([-*]|\d+\.)\s)"
+
 
 def texto_en_linea(texto, tamano_codigo=8.5):
     """Markdown en línea (negrita, cursiva, código, enlaces) a marcado de reportlab."""
@@ -117,55 +121,89 @@ def tabla(filas):
     return [t, Spacer(1, 8)]
 
 
+# Cada leer_* recibe la posición donde empieza su bloque y devuelve los elementos
+# generados junto con la posición de la primera línea que no consumió.
+
+def leer_codigo(lineas, i):
+    i += 1
+    bloque = []
+    while i < len(lineas) and not lineas[i].startswith("```"):
+        bloque.append(lineas[i])
+        i += 1
+    return [Preformatted("\n".join(bloque), ESTILOS["codigo"])], i + 1
+
+
+def leer_tabla(lineas, i):
+    filas = []
+    while i < len(lineas) and lineas[i].startswith("|"):
+        if not re.match(PATRON_SEPARADOR_TABLA, lineas[i]):
+            filas.append(lineas[i].strip().strip("|").split("|"))
+        i += 1
+    return tabla(filas), i
+
+
+def leer_titulo(coincidencia, i, nivel_base):
+    nivel = min(len(coincidencia.group(1)) + nivel_base, 3)
+    return [Paragraph(texto_en_linea(coincidencia.group(2)), ESTILOS[f"h{nivel}"])], i + 1
+
+
+def continua_item(linea):
+    return re.match(r"^\s{2,}\S", linea) and not re.match(PATRON_ITEM, linea)
+
+
+def leer_item(coincidencia, lineas, i):
+    contenido = coincidencia.group(2)
+    while i + 1 < len(lineas) and continua_item(lineas[i + 1]):
+        i += 1
+        contenido += " " + lineas[i].strip()
+    vineta = "•" if coincidencia.group(1) in "-*" else coincidencia.group(1)
+    return [Paragraph(texto_en_linea(contenido), ESTILOS["li"], bulletText=vineta)], i + 1
+
+
+def leer_cita(lineas, i):
+    bloque = []
+    while i < len(lineas) and lineas[i].startswith(">"):
+        bloque.append(lineas[i].lstrip("> ").strip())
+        i += 1
+    return [Paragraph(texto_en_linea(" ".join(bloque)), ESTILOS["cita"])], i
+
+
+def leer_parrafo(lineas, i):
+    parrafo = [lineas[i].strip()]
+    while i + 1 < len(lineas) and lineas[i + 1].strip() and not re.match(PATRON_INICIO_BLOQUE, lineas[i + 1]):
+        i += 1
+        parrafo.append(lineas[i].strip())
+    return [Paragraph(texto_en_linea(" ".join(parrafo)), ESTILOS["p"])], i + 1
+
+
+def leer_bloque(lineas, i, nivel_base):
+    """Identifica el bloque que empieza en la línea i y delega en su lector."""
+    linea = lineas[i]
+    if linea.startswith("```"):
+        return leer_codigo(lineas, i)
+    if linea.startswith("|"):
+        return leer_tabla(lineas, i)
+    if titulo := re.match(r"^(#{1,4})\s+(.*)", linea):
+        return leer_titulo(titulo, i, nivel_base)
+    if item := re.match(PATRON_ITEM + r"(.*)", linea):
+        return leer_item(item, lineas, i)
+    if linea.startswith(">"):
+        return leer_cita(lineas, i)
+    if linea.strip() == "---":
+        return [Spacer(1, 6)], i + 1
+    if linea.strip():
+        return leer_parrafo(lineas, i)
+    return [], i + 1
+
+
 def markdown_a_flowables(texto, nivel_base=0):
     """Convierte el subconjunto de Markdown usado en docs/ a elementos de reportlab."""
     flowables = []
     lineas = texto.splitlines()
     i = 0
     while i < len(lineas):
-        linea = lineas[i]
-        if linea.startswith("```"):
-            bloque = []
-            i += 1
-            while i < len(lineas) and not lineas[i].startswith("```"):
-                bloque.append(lineas[i])
-                i += 1
-            flowables.append(Preformatted("\n".join(bloque), ESTILOS["codigo"]))
-        elif linea.startswith("|"):
-            filas = []
-            while i < len(lineas) and lineas[i].startswith("|"):
-                if not re.match(r"^\|[\s:|-]+\|$", lineas[i]):
-                    filas.append([c for c in lineas[i].strip().strip("|").split("|")])
-                i += 1
-            flowables.extend(tabla(filas))
-            continue
-        elif m := re.match(r"^(#{1,4})\s+(.*)", linea):
-            nivel = min(len(m.group(1)) + nivel_base, 3)
-            flowables.append(Paragraph(texto_en_linea(m.group(2)), ESTILOS[f"h{nivel}"]))
-        elif re.match(r"^\s*([-*]|\d+\.)\s+", linea):
-            m = re.match(r"^\s*([-*]|\d+\.)\s+(.*)", linea)
-            contenido = m.group(2)
-            while i + 1 < len(lineas) and re.match(r"^\s{2,}\S", lineas[i + 1]) and not re.match(r"^\s*([-*]|\d+\.)\s", lineas[i + 1]):
-                i += 1
-                contenido += " " + lineas[i].strip()
-            vineta = "•" if m.group(1) in "-*" else m.group(1)
-            flowables.append(Paragraph(texto_en_linea(contenido), ESTILOS["li"], bulletText=vineta))
-        elif linea.startswith(">"):
-            bloque = []
-            while i < len(lineas) and lineas[i].startswith(">"):
-                bloque.append(lineas[i].lstrip("> ").strip())
-                i += 1
-            flowables.append(Paragraph(texto_en_linea(" ".join(bloque)), ESTILOS["cita"]))
-            continue
-        elif linea.strip() == "---":
-            flowables.append(Spacer(1, 6))
-        elif linea.strip():
-            parrafo = [linea.strip()]
-            while i + 1 < len(lineas) and lineas[i + 1].strip() and not re.match(r"^(#|\||```|>|\s*([-*]|\d+\.)\s)", lineas[i + 1]):
-                i += 1
-                parrafo.append(lineas[i].strip())
-            flowables.append(Paragraph(texto_en_linea(" ".join(parrafo)), ESTILOS["p"]))
-        i += 1
+        elementos, i = leer_bloque(lineas, i, nivel_base)
+        flowables.extend(elementos)
     return flowables
 
 
@@ -210,40 +248,50 @@ def portada(datos):
     return elementos
 
 
-def main():
-    config = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-    salida = sys.argv[2]
-    raiz = Path(__file__).resolve().parent.parent
-    docs = raiz / "docs"
-
-    historia = portada(config)
-
+def seccion_indice():
     indice = TableOfContents()
     indice.levelStyles = [ESTILOS["toc1"]]
-    historia += [Paragraph("Índice", ParagraphStyle("indice", parent=ESTILOS["h1"])), indice, PageBreak()]
+    return [Paragraph("Índice", ParagraphStyle("indice", parent=ESTILOS["h1"])), indice, PageBreak()]
 
-    historia += [Paragraph("Resumen ejecutivo", ESTILOS["h1"])]
-    historia += markdown_a_flowables(config["resumen_ejecutivo"])
-    historia += [Paragraph("Enlaces de la entrega", ESTILOS["h2"])]
-    historia += markdown_a_flowables(config["enlaces"])
-    historia.append(PageBreak())
 
+def seccion_resumen(config):
+    return [Paragraph("Resumen ejecutivo", ESTILOS["h1"]),
+            *markdown_a_flowables(config["resumen_ejecutivo"]),
+            Paragraph("Enlaces de la entrega", ESTILOS["h2"]),
+            *markdown_a_flowables(config["enlaces"]),
+            PageBreak()]
+
+
+def seccion_capitulos(config, docs):
+    elementos = []
     for capitulo in config["capitulos"]:
-        texto = (docs / capitulo).read_text(encoding="utf-8")
-        historia += markdown_a_flowables(texto)
-        historia.append(PageBreak())
+        elementos += markdown_a_flowables((docs / capitulo).read_text(encoding="utf-8"))
+        elementos.append(PageBreak())
+    return elementos
 
-    historia += [Paragraph("Anexos", ESTILOS["h1"])]
-    historia += markdown_a_flowables(config["anexos"])
-    historia += [Paragraph("Anexo A — Checklist de code review", ESTILOS["h2"])]
-    historia += markdown_a_flowables((docs / "checklist-code-review.md").read_text(encoding="utf-8").split("\n", 1)[1],
-                                     nivel_base=1)
 
+def seccion_anexos(config, docs):
+    checklist = (docs / "checklist-code-review.md").read_text(encoding="utf-8").split("\n", 1)[1]
+    return [Paragraph("Anexos", ESTILOS["h1"]),
+            *markdown_a_flowables(config["anexos"]),
+            Paragraph("Anexo A — Checklist de code review", ESTILOS["h2"]),
+            *markdown_a_flowables(checklist, nivel_base=1)]
+
+
+def construir_pdf(historia, config, salida):
     doc = Informe(salida, pagesize=A4, leftMargin=2 * cm, rightMargin=2 * cm, topMargin=2 * cm,
                   bottomMargin=2 * cm, title=config["titulo"], author=", ".join(config["integrantes"]),
                   subject=config["materia"])
     pie = lambda c, d: pie_de_pagina(c, d, f'{config["materia"]} — {config["titulo"]}')
     doc.multiBuild(historia, onLaterPages=pie)
+
+
+def main():
+    config = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    docs = Path(__file__).resolve().parent.parent / "docs"
+    historia = (portada(config) + seccion_indice() + seccion_resumen(config)
+                + seccion_capitulos(config, docs) + seccion_anexos(config, docs))
+    construir_pdf(historia, config, sys.argv[2])
 
 
 if __name__ == "__main__":
