@@ -5,6 +5,7 @@ Uso: python tools/generar_informe.py tools/informe.json salida.pdf
 El JSON define los datos de portada (comisión, docente, enlaces). Los capítulos
 se leen de docs/ para que el informe y el repositorio digan siempre lo mismo.
 """
+import argparse
 import json
 import re
 import sys
@@ -286,12 +287,22 @@ def construir_pdf(historia, config, salida):
     doc.multiBuild(historia, onLaterPages=pie)
 
 
-def main():
-    config = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+def leer_argumentos(argv=None):
+    parser = argparse.ArgumentParser(description="Genera el informe PDF del TPI a partir de docs/.")
+    parser.add_argument("config", type=Path, help="JSON con portada, resumen, enlaces y capítulos (tools/informe.json)")
+    parser.add_argument("salida", type=Path, help="ruta del PDF a generar")
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    argumentos = leer_argumentos(argv)
+    if not argumentos.config.is_file():
+        sys.exit(f"No existe el archivo de configuración: {argumentos.config}")
+    config = json.loads(argumentos.config.read_text(encoding="utf-8"))
     docs = Path(__file__).resolve().parent.parent / "docs"
     historia = (portada(config) + seccion_indice() + seccion_resumen(config)
                 + seccion_capitulos(config, docs) + seccion_anexos(config, docs))
-    construir_pdf(historia, config, sys.argv[2])
+    construir_pdf(historia, config, str(argumentos.salida))
 
 
 if __name__ == "__main__":
