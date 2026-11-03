@@ -1,6 +1,9 @@
 """Genera el informe PDF del TPI a partir de los documentos Markdown de docs/.
 
-Uso: python tools/generar_informe.py tools/informe.json salida.pdf
+Uso: python tools/generar_informe.py tools/informe.json salida.pdf [--borrador]
+
+Si queda alguna marca [COMPLETAR en el JSON o en los capítulos, el script
+termina con error y lista dónde está; --borrador genera igual, con un aviso.
 
 El JSON define los datos de portada (comisión, docente, enlaces). Los capítulos
 se leen de docs/ para que el informe y el repositorio digan siempre lo mismo.
@@ -287,10 +290,48 @@ def construir_pdf(historia, config, salida):
     doc.multiBuild(historia, onLaterPages=pie)
 
 
+MARCA_PENDIENTE = "[COMPLETAR"
+
+
+def textos_del_config(valor, ruta="informe.json"):
+    """Recorre el JSON y devuelve (ubicación, texto) por cada string que contiene."""
+    if isinstance(valor, str):
+        yield ruta, valor
+    elif isinstance(valor, dict):
+        for clave, hijo in valor.items():
+            yield from textos_del_config(hijo, f"{ruta} > {clave}")
+    elif isinstance(valor, list):
+        for hijo in valor:
+            yield from textos_del_config(hijo, ruta)
+
+
+def buscar_pendientes(config, docs):
+    """Lista los lugares del config y de los capítulos que todavía tienen la marca [COMPLETAR."""
+    pendientes = [ubicacion for ubicacion, texto in textos_del_config(config) if MARCA_PENDIENTE in texto]
+    for archivo in [*config["capitulos"], "checklist-code-review.md"]:
+        for numero, linea in enumerate((docs / archivo).read_text(encoding="utf-8").splitlines(), start=1):
+            if MARCA_PENDIENTE in linea:
+                pendientes.append(f"docs/{archivo}:{numero}")
+    return pendientes
+
+
+def verificar_pendientes(config, docs, borrador):
+    pendientes = buscar_pendientes(config, docs)
+    if not pendientes:
+        return
+    detalle = "\n".join(f"  - {p}" for p in pendientes)
+    if not borrador:
+        sys.exit(f"El informe tiene datos sin completar:\n{detalle}\n"
+                 "Completalos o usá --borrador para generar una versión de trabajo.")
+    print(f"Aviso: borrador con datos sin completar:\n{detalle}", file=sys.stderr)
+
+
 def leer_argumentos(argv=None):
     parser = argparse.ArgumentParser(description="Genera el informe PDF del TPI a partir de docs/.")
     parser.add_argument("config", type=Path, help="JSON con portada, resumen, enlaces y capítulos (tools/informe.json)")
     parser.add_argument("salida", type=Path, help="ruta del PDF a generar")
+    parser.add_argument("--borrador", action="store_true",
+                        help="genera el PDF aunque queden marcas [COMPLETAR (solo para revisar, no para entregar)")
     return parser.parse_args(argv)
 
 
@@ -300,6 +341,7 @@ def main(argv=None):
         sys.exit(f"No existe el archivo de configuración: {argumentos.config}")
     config = json.loads(argumentos.config.read_text(encoding="utf-8"))
     docs = Path(__file__).resolve().parent.parent / "docs"
+    verificar_pendientes(config, docs, argumentos.borrador)
     historia = (portada(config) + seccion_indice() + seccion_resumen(config)
                 + seccion_capitulos(config, docs) + seccion_anexos(config, docs))
     construir_pdf(historia, config, str(argumentos.salida))
