@@ -16,17 +16,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
+import java.util.List;
 
+import static ar.edu.utn.tup.solicitudes.GestoresDePrueba.RELOJ_FIJO;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("SolicitudService")
 class SolicitudServiceTest {
-
-    private static final Clock RELOJ_FIJO = Clock.fixed(Instant.parse("2026-10-15T12:00:00Z"), ZoneOffset.UTC);
 
     private SolicitudService servicio;
 
@@ -88,25 +85,30 @@ class SolicitudServiceTest {
         servicio.registrar(datos("10002", "REVISION_NOTA"));
         servicio.registrar(datos("10001", "EQUIVALENCIA"));
 
-        FiltroSolicitudes filtro = FiltroSolicitudes.todas().conLegajo("10001").conPrioridad(Prioridad.MEDIA);
+        List<Solicitud> filtradas = servicio.buscar(FiltroSolicitudes.todas().conLegajo("10001").conPrioridad(Prioridad.MEDIA));
 
-        assertEquals(1, servicio.buscar(filtro).size());
-        assertEquals(TipoSolicitud.EQUIVALENCIA, servicio.buscar(filtro).get(0).getTipo());
-        assertEquals(TipoSolicitud.REVISION_NOTA, servicio.buscar(FiltroSolicitudes.todas()).get(0).getTipo());
+        assertEquals(List.of(TipoSolicitud.EQUIVALENCIA), filtradas.stream().map(Solicitud::getTipo).toList());
+        assertEquals(TipoSolicitud.REVISION_NOTA, servicio.buscar(FiltroSolicitudes.todas()).get(0).getTipo(),
+                "sin filtros se ordena por prioridad: primero la ALTA");
     }
 
     @Test
     void reemplazarDatosReiniciaNumeracionYEstudiantes() {
         servicio.registrar(datos("10001", "CERTIFICADO"));
-        SolicitudService origen = nuevoServicio();
-        for (int i = 0; i < 5; i++) {
-            origen.registrar(datos("1000" + i, "CERTIFICADO"));
-        }
+        SolicitudService origen = servicioConSolicitudes("10000", "10001", "10002", "10003", "10004");
 
         servicio.reemplazarDatos(origen.todas());
 
         assertEquals(5, servicio.todas().size());
-        assertEquals(6, servicio.registrar(datos("20000", "CERTIFICADO")).getId());
-        servicio.actualizarEmail("10004", "nuevo@example.com");
+        assertEquals(6, servicio.registrar(datos("20000", "CERTIFICADO")).getId(), "la numeración sigue al id más alto cargado");
+        assertDoesNotThrow(() -> servicio.actualizarEmail("10004", "nuevo@example.com"), "los estudiantes cargados se pueden encontrar");
+    }
+
+    private SolicitudService servicioConSolicitudes(String... legajos) {
+        SolicitudService otro = nuevoServicio();
+        for (String legajo : legajos) {
+            otro.registrar(datos(legajo, "CERTIFICADO"));
+        }
+        return otro;
     }
 }

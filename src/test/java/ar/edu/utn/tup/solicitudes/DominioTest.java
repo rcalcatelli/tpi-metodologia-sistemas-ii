@@ -16,6 +16,11 @@ class DominioTest {
 
     private static final Responsable ALUMNADO = new Responsable(1, "Laura Gómez", Area.ALUMNADO);
     private static final Responsable DEPARTAMENTO = new Responsable(2, "Martín Díaz", Area.DEPARTAMENTO_ACADEMICO);
+    private static final LocalDate FECHA_ALTA = LocalDate.of(2026, 10, 1);
+
+    private static Estudiante ana() {
+        return new Estudiante("10001", "Ana Torres", "ana@example.com");
+    }
 
     @Nested
     @DisplayName("Estado")
@@ -61,7 +66,7 @@ class DominioTest {
 
         @Test
         void estudianteNoAceptaEmailInvalido() {
-            Estudiante estudiante = new Estudiante("10001", "Ana", "ana@example.com");
+            Estudiante estudiante = ana();
             assertThrows(DatosInvalidosException.class, () -> estudiante.cambiarEmail("sin-arroba"));
             assertEquals("ana@example.com", estudiante.getEmail());
         }
@@ -82,8 +87,7 @@ class DominioTest {
 
         @BeforeEach
         void crear() {
-            Estudiante estudiante = new Estudiante("10001", "Ana Torres", "ana@example.com");
-            solicitud = new Solicitud(1, estudiante, TipoSolicitud.CERTIFICADO, "Certificado", Prioridad.BAJA, LocalDate.of(2026, 10, 1));
+            solicitud = new Solicitud(1, ana(), TipoSolicitud.CERTIFICADO, "Certificado", Prioridad.BAJA, FECHA_ALTA);
         }
 
         @Test
@@ -124,15 +128,18 @@ class DominioTest {
 
         @Test
         void erroresDeTransicionSonExcepcionesConMensaje() {
-            assertEquals("transicion invalida",
-                    assertThrows(ReglaNegocioException.class, () -> solicitud.cambiarEstado(Estado.RESUELTA, "")).getMessage());
-            assertEquals("transicion invalida",
-                    assertThrows(ReglaNegocioException.class, () -> solicitud.cambiarEstado(null, "")).getMessage());
-            assertEquals("para rechazar hay que indicar el motivo",
-                    assertThrows(ReglaNegocioException.class, () -> solicitud.cambiarEstado(Estado.RECHAZADA, " ")).getMessage());
+            assertRechazaCambio(Estado.RESUELTA, "", "transicion invalida");
+            assertRechazaCambio(null, "", "transicion invalida");
+            assertRechazaCambio(Estado.RECHAZADA, " ", "para rechazar hay que indicar el motivo");
+
             solicitud.cambiarEstado(Estado.EN_PROCESO, "");
-            assertEquals("no se puede resolver sin responsable",
-                    assertThrows(ReglaNegocioException.class, () -> solicitud.cambiarEstado(Estado.RESUELTA, "")).getMessage());
+            assertRechazaCambio(Estado.RESUELTA, "", "no se puede resolver sin responsable");
+        }
+
+        private void assertRechazaCambio(Estado destino, String observacion, String mensajeEsperado) {
+            ReglaNegocioException error = assertThrows(ReglaNegocioException.class,
+                    () -> solicitud.cambiarEstado(destino, observacion));
+            assertEquals(mensajeEsperado, error.getMessage());
         }
 
         @Test
