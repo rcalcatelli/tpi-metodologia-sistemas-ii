@@ -1,16 +1,21 @@
 """Genera el informe PDF del TPI a partir de los documentos Markdown de docs/.
 
-Uso: python tools/generar_informe.py tools/informe.json salida.pdf
+Uso: python tools/generar_informe.py tools/informe.json salida.pdf [--borrador]
+
+Si queda alguna marca [COMPLETAR en el JSON o en los capítulos, el script
+termina con error y lista dónde está; --borrador genera igual, con un aviso.
 
 El JSON define los datos de portada (comisión, docente, enlaces). Los capítulos
 se leen de docs/ para que el informe y el repositorio digan siempre lo mismo.
 """
+import argparse
 import json
 import re
 import sys
 from pathlib import Path
 from xml.sax.saxutils import escape
 
+import reportlab
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
@@ -22,14 +27,41 @@ from reportlab.platypus import (KeepTogether, PageBreak, Paragraph, Preformatted
                                 Table, TableStyle)
 from reportlab.platypus.tableofcontents import TableOfContents
 
-FUENTES = Path("C:/Windows/Fonts")
-pdfmetrics.registerFont(TTFont("Cuerpo", str(FUENTES / "calibri.ttf")))
-pdfmetrics.registerFont(TTFont("Cuerpo-Negrita", str(FUENTES / "calibrib.ttf")))
-pdfmetrics.registerFont(TTFont("Cuerpo-Cursiva", str(FUENTES / "calibrii.ttf")))
-pdfmetrics.registerFont(TTFont("Cuerpo-NegritaCursiva", str(FUENTES / "calibriz.ttf")))
-pdfmetrics.registerFont(TTFont("Codigo", str(FUENTES / "consola.ttf")))
-pdfmetrics.registerFontFamily("Cuerpo", normal="Cuerpo", bold="Cuerpo-Negrita", italic="Cuerpo-Cursiva",
-                              boldItalic="Cuerpo-NegritaCursiva")
+# Juegos de fuentes en orden de preferencia: (nombre, carpetas posibles, archivo por cada fuente lógica).
+# El último viene con reportlab, así que siempre está disponible, aunque no es monoespaciado para el código.
+JUEGOS_DE_FUENTES = [
+    ("Calibri/Consolas", [Path("C:/Windows/Fonts")],
+     {"Cuerpo": "calibri.ttf", "Cuerpo-Negrita": "calibrib.ttf", "Cuerpo-Cursiva": "calibrii.ttf",
+      "Cuerpo-NegritaCursiva": "calibriz.ttf", "Codigo": "consola.ttf"}),
+    ("DejaVu", [Path("/usr/share/fonts/truetype/dejavu"), Path("/usr/share/fonts/dejavu"),
+                Path("/usr/share/fonts/TTF"), Path("/Library/Fonts")],
+     {"Cuerpo": "DejaVuSans.ttf", "Cuerpo-Negrita": "DejaVuSans-Bold.ttf", "Cuerpo-Cursiva": "DejaVuSans-Oblique.ttf",
+      "Cuerpo-NegritaCursiva": "DejaVuSans-BoldOblique.ttf", "Codigo": "DejaVuSansMono.ttf"}),
+    ("Vera (incluida en reportlab)", [Path(reportlab.__file__).parent / "fonts"],
+     {"Cuerpo": "Vera.ttf", "Cuerpo-Negrita": "VeraBd.ttf", "Cuerpo-Cursiva": "VeraIt.ttf",
+      "Cuerpo-NegritaCursiva": "VeraBI.ttf", "Codigo": "Vera.ttf"}),
+]
+
+
+def ubicar_juego(carpetas, archivos):
+    """Devuelve la primera carpeta que contiene todos los archivos del juego, o None."""
+    return next((c for c in carpetas if all((c / a).is_file() for a in archivos.values())), None)
+
+
+def registrar_fuentes(juegos=None):
+    """Registra el primer juego de fuentes disponible en esta máquina y devuelve su nombre."""
+    for nombre, carpetas, archivos in juegos or JUEGOS_DE_FUENTES:
+        carpeta = ubicar_juego(carpetas, archivos)
+        if carpeta is None:
+            continue
+        for fuente, archivo in archivos.items():
+            pdfmetrics.registerFont(TTFont(fuente, str(carpeta / archivo)))
+        pdfmetrics.registerFontFamily("Cuerpo", normal="Cuerpo", bold="Cuerpo-Negrita", italic="Cuerpo-Cursiva",
+                                      boldItalic="Cuerpo-NegritaCursiva")
+        if nombre != JUEGOS_DE_FUENTES[0][0]:
+            print(f"Aviso: no se encontró Calibri/Consolas; se usa {nombre}.", file=sys.stderr)
+        return nombre
+    raise RuntimeError("No se encontró ningún juego de fuentes completo.")
 
 AZUL = colors.HexColor("#1F3B5C")
 AZUL_CLARO = colors.HexColor("#E8EEF5")
@@ -286,12 +318,62 @@ def construir_pdf(historia, config, salida):
     doc.multiBuild(historia, onLaterPages=pie)
 
 
-def main():
-    config = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+MARCA_PENDIENTE = "[COMPLETAR"
+
+
+def textos_del_config(valor, ruta="informe.json"):
+    """Recorre el JSON y devuelve (ubicación, texto) por cada string que contiene."""
+    if isinstance(valor, str):
+        yield ruta, valor
+    elif isinstance(valor, dict):
+        for clave, hijo in valor.items():
+            yield from textos_del_config(hijo, f"{ruta} > {clave}")
+    elif isinstance(valor, list):
+        for hijo in valor:
+            yield from textos_del_config(hijo, ruta)
+
+
+def buscar_pendientes(config, docs):
+    """Lista los lugares del config y de los capítulos que todavía tienen la marca [COMPLETAR."""
+    pendientes = [ubicacion for ubicacion, texto in textos_del_config(config) if MARCA_PENDIENTE in texto]
+    for archivo in [*config["capitulos"], "checklist-code-review.md"]:
+        for numero, linea in enumerate((docs / archivo).read_text(encoding="utf-8").splitlines(), start=1):
+            if MARCA_PENDIENTE in linea:
+                pendientes.append(f"docs/{archivo}:{numero}")
+    return pendientes
+
+
+def verificar_pendientes(config, docs, borrador):
+    pendientes = buscar_pendientes(config, docs)
+    if not pendientes:
+        return
+    detalle = "\n".join(f"  - {p}" for p in pendientes)
+    if not borrador:
+        sys.exit(f"El informe tiene datos sin completar:\n{detalle}\n"
+                 "Completalos o usá --borrador para generar una versión de trabajo.")
+    print(f"Aviso: borrador con datos sin completar:\n{detalle}", file=sys.stderr)
+
+
+def leer_argumentos(argv=None):
+    parser = argparse.ArgumentParser(description="Genera el informe PDF del TPI a partir de docs/.")
+    parser.add_argument("config", type=Path, help="JSON con portada, resumen, enlaces y capítulos (tools/informe.json)")
+    parser.add_argument("salida", type=Path, help="ruta del PDF a generar")
+    parser.add_argument("--borrador", action="store_true",
+                        help="genera el PDF aunque queden marcas [COMPLETAR (solo para revisar, no para entregar)")
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    argumentos = leer_argumentos(argv)
+    if not argumentos.config.is_file():
+        sys.exit(f"No existe el archivo de configuración: {argumentos.config}")
+    config = json.loads(argumentos.config.read_text(encoding="utf-8"))
     docs = Path(__file__).resolve().parent.parent / "docs"
+    verificar_pendientes(config, docs, argumentos.borrador)
+    registrar_fuentes()
     historia = (portada(config) + seccion_indice() + seccion_resumen(config)
                 + seccion_capitulos(config, docs) + seccion_anexos(config, docs))
-    construir_pdf(historia, config, sys.argv[2])
+    construir_pdf(historia, config, str(argumentos.salida))
 
 
 if __name__ == "__main__":

@@ -26,7 +26,15 @@ tests y code review.
 
 ## Tecnologías
 
-Java 17 · Maven · JUnit 5 · JaCoCo · Python 3 (script de métricas)
+Java 17 · Maven · JUnit 5 · JaCoCo · Python 3 (métricas e informe PDF)
+
+Para regenerar el informe:
+
+```bash
+python -m pip install -r tools/requirements.txt
+python tools/generar_informe.py tools/informe.json informe.pdf              # falla si queda algún [COMPLETAR
+python tools/generar_informe.py tools/informe.json informe.pdf --borrador   # versión de trabajo
+```
 
 ## Instalación y uso
 
@@ -48,6 +56,7 @@ Reporte de cobertura: `target/site/jacoco/index.html`.
 | `etapa-pruebas` | Tests unitarios nuevos y evidencias antes/después. |
 | `etapa-docs` | Code review, documentación completa e informe. |
 | `estado-refactorizado` | Estado final del código. |
+| `estadorefactorizado` | Mismo hito, con el nombre literal de la consigna. |
 
 ```bash
 git checkout estado-inicial         # ver la versión original
