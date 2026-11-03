@@ -53,7 +53,7 @@ documentado**; ninguno afecta los casos cubiertos por la caracterización.
 
 | Evidencia | Archivo |
 |---|---|
-| Suite ejecutada en **cada commit** del historial (59 → … → 96 → 97, 0 fallos) | [`evidencias/tests-por-commit.txt`](evidencias/tests-por-commit.txt) |
+| Suite ejecutada en **cada commit** del historial (59 → … → 96 → 97 → 98, 0 fallos) | [`evidencias/tests-por-commit.txt`](evidencias/tests-por-commit.txt) |
 | Resultado final por clase de test | [`evidencias/tests-resultado-final.txt`](evidencias/tests-resultado-final.txt) |
 | Salida del demo antes / después y diff | [`demo-salida-antes.txt`](evidencias/demo-salida-antes.txt), [`demo-salida-despues.txt`](evidencias/demo-salida-despues.txt), [`demo-diff.txt`](evidencias/demo-diff.txt) |
 | Entrada inválida antes (crash) / después | [`entrada-invalida-antes.txt`](evidencias/entrada-invalida-antes.txt), [`entrada-invalida-despues.txt`](evidencias/entrada-invalida-despues.txt) |
@@ -71,7 +71,8 @@ b0277d9   Refactor: Extract Method, Rename y eliminación de duplicación    59 
 6808995   Agrega tests unitarios de dominio, servicio, persistencia ...    96      0      0
 7268c24   Documenta pruebas y verificación ...                             96      0      0
 ef993da   Aplica correcciones del code review                              97      0      0
-...       (commits de documentación posteriores)                           97      0      0
+...       (documentación, herramientas y PRs #1 a #3)                      97      0      0
+43ca3e1   Arma la pregunta de tipo del menú desde TipoSolicitud            98      0      0
 ```
 
 ## Cómo reproducir

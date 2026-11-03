@@ -13,3 +13,23 @@ c18c177   Documenta SOLID, refactorings, code review, conclusiones y uso de IA  
 c71399d   Agrega generador del informe PDF a partir de docs/                           97      0      0
 152f604   Actualiza el conteo de tests en la documentación de pruebas                 97      0      0
 542e2d2   Adapta la documentación a entrega grupal y aclara fragmentos de refacto     97      0      0
+07e23bd   Regenera evidencias sobre el estado final                                    97      0      0
+ed5b7e2   Agrega script para regenerar el anexo desde el repositorio                   97      0      0
+b3bafbd   Incorpora la autoría grupal y la declaración de IA de la copia TPI_Fin     97      0      0
+7ce3071   Agrega la URL del repositorio en GitHub                                      97      0      0
+aa54e97   Corrige el nombre completo de Basualdo Arcati, Pablo Gabriel Ramón          97      0      0
+717da86   Unifica la cobertura informada y actualiza fecha y declaración de IA        97      0      0
+6f04f75   refactor(tools): separa generar_informe en funciones por bloque y seccio     97      0      0
+83189a5   refactor(test): limpia los 38 tests unitarios sin cambiar casos ni cober     97      0      0
+913e541   Merge pull request #1 from rcalcatelli/refactor/generar-informe              97      0      0
+39745e0   Merge pull request #2 from rcalcatelli/refactor/tests-unitarios              97      0      0
+9622b9e   refactor(tools): lee los argumentos de generar_informe con argparse          97      0      0
+f3084ae   feat(tools): corta la generación del informe si quedan marcas [COMPLETA     97      0      0
+2889811   docs: pasa al repo la comisión, la conclusión de Pablo y el tag estado     97      0      0
+9802399   build(tools): agrega requirements.txt con las dependencias del informe       97      0      0
+290c158   fix(tools): busca fuentes alternativas si no está Calibri                   97      0      0
+926090c   test(tools): cubre el parser, los pendientes y las fuentes del generador     97      0      0
+f58b7e3   Merge pull request #3 from rcalcatelli/feat/informe-reproducible             97      0      0
+e430f49   Agrega la conclusión individual de Calcatelli                               97      0      0
+43ca3e1   Arma la pregunta de tipo del menú desde TipoSolicitud                       98      0      0
+33da5d6   Regenera evidencias sobre el estado final y carga el docente                 98      0      0
